@@ -6,8 +6,8 @@ final loginUserProvider =
   return Future.delayed(const Duration(seconds: 1)).then(
     (value) => UserModel(
       id: id,
-      name: "test",
-      email: "test@gmail",
+      name: "test_name",
+      email: "test@mail",
     ),
   );
 });
