@@ -4,7 +4,7 @@ import 'package:pass_manager/component/form/customized_text_form_field.dart';
 import 'package:pass_manager/component/form/password_text_form_field.dart';
 import 'package:pass_manager/component/snack_bar/failed_snack_bar.dart';
 import 'package:pass_manager/component/snack_bar/success_snack_bar.dart';
-import 'package:pass_manager/screen/key_list_screen.dart';
+import 'package:pass_manager/screen/password_list_screen.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
@@ -66,10 +66,10 @@ class LoginScreen extends StatelessWidget {
                       text: "You are Logged In!",
                       fontSize: 20,
                     ).showSnackBar(context);
-                    String uid = "test";
+                    String uid = "test_id";
                     Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => KeyListScreen(
+                        builder: (context) => PasswordListScreen(
                           uid: uid,
                         ),
                       ),
