@@ -9,14 +9,14 @@ class CustomizedButton extends NeoPopButton {
     void Function()? onTap,
     double? vertical,
   }) : super(
-          key: key, color: Colors.orange,
-          bottomShadowColor: Colors.green,
-          rightShadowColor: Colors.blue,
+          key: key, color: const Color.fromARGB(255, 100, 100, 100),
+          bottomShadowColor: Colors.black,
+          rightShadowColor: const Color.fromARGB(255, 210, 210, 210),
           // animationDuration: Duration(),
           // depth: kButtonDepth,
           onTapUp: onTap,
           border: Border.all(
-            color: Colors.brown,
+            color: Colors.black,
             // width: ,
           ),
           child: Padding(
