@@ -18,6 +18,7 @@ class CustomizedTextFormField extends TextFormField {
             hintText: hintText,
             labelText: labelText,
             suffixIcon: suffixIcon,
+            border: const OutlineInputBorder(),
           ),
           validator: validator,
           obscureText: obscureText,
