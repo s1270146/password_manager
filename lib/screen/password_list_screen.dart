@@ -13,6 +13,7 @@ class PasswordListScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final getData = ref.watch(passwordListProvider(uid));
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 63, 0, 113),
       appBar: CustomizedAppBar(
         automaticallyImplyLeading: false,
         title: "Password List",
