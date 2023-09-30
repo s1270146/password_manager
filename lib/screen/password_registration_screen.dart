@@ -40,6 +40,7 @@ class PasswordRegistrationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 97, 0, 148),
       appBar: CustomizedAppBar(
         title: title,
       ),
@@ -54,9 +55,12 @@ class PasswordRegistrationScreen extends StatelessWidget {
                 width: 300,
                 child: CustomizedTextFormField(
                   controller: nameController,
+                  textColor: Colors.white,
                   icon: const Icon(Icons.badge),
+                  iconColor: Colors.white,
                   labelText: "Name of the Password *",
                   hintText: "Enter the name of the password you want register.",
+                  borderColor: Colors.white,
                   validator: (String? value) {
                     return (value != null && value.isNotEmpty)
                         ? null
@@ -69,7 +73,10 @@ class PasswordRegistrationScreen extends StatelessWidget {
                 width: 300,
                 child: PasswordTextFormField(
                   controller: passwordController,
+                  textColor: Colors.white,
+                  iconColor: Colors.white,
                   hintText: "Enter the string the password you want register.",
+                  borderColor: Colors.white,
                   validator: (String? value) {
                     return (value != null && value.isNotEmpty)
                         ? null
