@@ -7,11 +7,21 @@ class PasswordTextFormField extends StatefulWidget {
     this.controller,
     this.hintText,
     this.validator,
+    this.iconColor,
+    this.textColor,
+    this.hintColor,
+    this.labelColor,
+    this.borderColor = Colors.grey,
   }) : super(key: key);
 
   final TextEditingController? controller;
   final String? hintText;
   final String? Function(String?)? validator;
+  final Color? iconColor;
+  final Color? textColor;
+  final Color? hintColor;
+  final Color? labelColor;
+  final Color borderColor;
 
   @override
   State<PasswordTextFormField> createState() => _PasswordTextFormFieldState();
@@ -30,13 +40,21 @@ class _PasswordTextFormFieldState extends State<PasswordTextFormField> {
     return CustomizedTextFormField(
       controller: widget.controller,
       icon: const Icon(Icons.key),
+      iconColor: widget.iconColor,
+      textColor: widget.textColor,
       hintText: widget.hintText,
+      hintColor: widget.hintColor,
       labelText: "Password *",
+      labelColor: widget.labelColor,
       validator: widget.validator,
+      borderColor: widget.borderColor,
       obscureText: isObscure,
       suffixIcon: IconButton(
         onPressed: suffixIconOnPressed,
-        icon: Icon(isObscure ? Icons.visibility_off : Icons.visibility),
+        icon: Icon(
+          isObscure ? Icons.visibility_off : Icons.visibility,
+          color: widget.iconColor,
+        ),
       ),
     );
   }
