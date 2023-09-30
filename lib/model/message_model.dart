@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class MessageModel {
   final String _title;
@@ -22,6 +23,10 @@ class MessageModel {
         _unread = unread,
         _createAt = createAt;
 
+  String getDisplayCreateAt() {
+    return DateFormat('yyyy年MM月dd日 hh:mm').format(_createAt);
+  }
+
   Widget showHeadline(BuildContext context, double width, double height) {
     return GestureDetector(
       onTap: () => showDialog<void>(
@@ -44,6 +49,7 @@ class MessageModel {
                 title: Text(_title),
               ),
               body: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
                     padding: const EdgeInsets.all(5),
@@ -51,8 +57,12 @@ class MessageModel {
                   ),
                   Container(
                     padding: const EdgeInsets.all(5),
-                    child: Text("Message:\n$_mainText"),
-                  )
+                    child: const Text("Message: "),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(5),
+                    child: Text(_mainText),
+                  ),
                 ],
               ),
             ),
@@ -67,26 +77,37 @@ class MessageModel {
         ),
         width: width,
         height: height,
-        child: Row(
+        child: Stack(
           children: [
             Container(
-              width: width - height / 2 - 10,
+              alignment: Alignment.bottomCenter,
+              padding: const EdgeInsets.all(5),
+              child: Text(
+                getDisplayCreateAt(),
+                style: const TextStyle(
+                  fontSize: 12,
+                ),
+              ),
+            ),
+            Container(
+              alignment: Alignment.topCenter,
               padding: const EdgeInsets.all(5),
               child: Text(
                 _title,
                 style: const TextStyle(
-                  fontSize: 18,
+                  fontSize: 20,
                 ),
               ),
             ),
-            SizedBox(
-              width: height / 2,
-              height: height / 2,
+            Container(
+              alignment: Alignment.centerRight,
+              margin: const EdgeInsets.all(5),
               child: Visibility(
                 visible: _unread,
                 child: const Icon(
                   Icons.circle,
                   color: Colors.red,
+                  size: 20,
                 ),
               ),
             )
