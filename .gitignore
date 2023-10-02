@@ -51,3 +51,4 @@ app.*.map.json
 /windows/
 .metadata
 analysis_options.yaml
+/lib/.env.json
