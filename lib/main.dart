@@ -2,8 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pass_manager/component/app_bar/customized_app_bar_theme.dart';
 import 'package:pass_manager/screen/login_screen.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Supabase.initialize(
+    url: "https://vwzckecvhxemeozszyxf.supabase.co",
+    anonKey: const String.fromEnvironment("SUPABASE_KEY"),
+  );
   runApp(const ProviderScope(child: MyApp()));
 }
 
