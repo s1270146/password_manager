@@ -1,3 +1,4 @@
+import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pass_manager/component/app_bar/customized_app_bar.dart';
@@ -44,6 +45,7 @@ class PasswordRegistrationScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final supabase = ref.watch(supabaseProvider);
+    final encrypter = ref.watch(encrypterProvider);
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 97, 0, 148),
       appBar: CustomizedAppBar(
@@ -133,17 +135,24 @@ class PasswordRegistrationScreen extends ConsumerWidget {
                       vertical: 13,
                       onTap: () async {
                         if (_formKey.currentState!.validate()) {
+                          final iv = encrypt.IV.fromLength(16);
+                          final encrypted = encrypter!
+                              .encrypt(passwordController.text, iv: iv);
+                          final encryptBase64 = encrypted.base64;
+                          final ivBase64 = iv.base64;
                           if (id != null) {
                             await supabase.from('password').update({
-                              "password": passwordController.text,
+                              "password": encryptBase64,
                               "name": nameController.text,
+                              "iv": ivBase64,
                             }).match({
                               "id": id,
                             });
                           } else {
                             await supabase.from('password').insert({
                               "name": nameController.text,
-                              "password": passwordController.text,
+                              "password": encryptBase64,
+                              "iv": ivBase64,
                               "uid": uid,
                             });
                           }

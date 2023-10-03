@@ -1,3 +1,4 @@
+import 'package:encrypt/encrypt.dart' as en;
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pass_manager/component/button/customized_button.dart';
@@ -75,6 +76,24 @@ class LoginScreen extends ConsumerWidget {
                         email: emailController.text,
                         password: passController.text,
                       );
+                      String loginPasswdTmp = passController.text;
+                      String passwd = "";
+                      if (loginPasswdTmp.length < 32) {
+                        passwd = loginPasswdTmp;
+                        for (; passwd.length < 32;) {
+                          passwd += ".";
+                        }
+                      } else if (loginPasswdTmp.length >= 32) {
+                        passwd = loginPasswdTmp.substring(0, 32);
+                      }
+                      ref.read(encrypterProvider.notifier).update(
+                            (state) => en.Encrypter(
+                              en.AES(
+                                en.Key.fromUtf8(passwd),
+                                mode: en.AESMode.cbc,
+                              ),
+                            ),
+                          );
                       final user = res.user;
                       if (!context.mounted) return;
                       if (user != null) {

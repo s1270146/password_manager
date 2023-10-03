@@ -8,6 +8,7 @@ final passwordListProvider = FutureProvider.autoDispose
     .family<PasswordListModel, String>((ref, id) async {
   final supabase = ref.watch(supabaseProvider);
   final user = await ref.watch(loginUserProvider(id));
+  final encrypter = ref.watch(encrypterProvider);
   final List<PasswordModel> passwordList = await supabase
       .from('password')
       .select()
@@ -17,7 +18,7 @@ final passwordListProvider = FutureProvider.autoDispose
     List<PasswordModel> passwordList = [];
     getList = getList as List;
     for (var data in getList) {
-      passwordList.add(PasswordModel.fromJson(data));
+      passwordList.add(PasswordModel.fromJson(data, encrypter!));
     }
     return passwordList;
   });
