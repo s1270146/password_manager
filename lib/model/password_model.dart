@@ -1,3 +1,4 @@
+import 'package:encrypt/encrypt.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:pass_manager/component/list_tile/password_view_box.dart';
@@ -12,6 +13,7 @@ class PasswordModel {
   final String _password;
   final String _uid;
   final bool _isShared;
+  final IV _iv;
   final DateTime _createdAt;
   const PasswordModel({
     required int id,
@@ -20,24 +22,31 @@ class PasswordModel {
     required String uid,
     required bool isShared,
     required DateTime createdAt,
+    required IV iv,
   })  : _createdAt = createdAt,
         _isShared = isShared,
         _uid = uid,
         _name = name,
         _id = id,
-        _password = password;
-  factory PasswordModel.fromJson(dynamic data) {
+        _password = password,
+        _iv = iv;
+  factory PasswordModel.fromJson(dynamic data, Encrypter encrypter) {
     try {
       final map = data as Map<String, dynamic>;
+      final decrypt = encrypter.decrypt(
+        Encrypted.fromBase64(map['password'].toString()),
+        iv: IV.fromBase64(map['iv'].toString()),
+      );
       return PasswordModel(
         id: map['id'],
         name: map['name'],
-        password: map['password'],
+        password: decrypt,
         uid: map['uid'],
         isShared: map['is_shared'],
         createdAt: DateTime.parse(
           map['created_at'],
         ),
+        iv: IV.fromBase64(map['iv']),
       );
     } catch (e) {
       print(e);
