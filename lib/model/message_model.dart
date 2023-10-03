@@ -2,29 +2,50 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class MessageModel {
+  final int _id;
   final String _title;
   final String _mainText;
   final String _fromUid;
   final String _toUid;
   final bool _unread;
-  final DateTime _createAt;
+  final DateTime _createdAt;
 
   MessageModel({
+    required int id,
     required String title,
     required String mainText,
     required String fromUid,
     required String toUid,
     required bool unread,
-    required DateTime createAt,
-  })  : _title = title,
+    required DateTime createdAt,
+  })  : _id = id,
+        _title = title,
         _mainText = mainText,
         _fromUid = fromUid,
         _toUid = toUid,
         _unread = unread,
-        _createAt = createAt;
+        _createdAt = createdAt;
+
+  factory MessageModel.fromJson(dynamic data) {
+    try {
+      final map = data as Map<String, dynamic>;
+      return MessageModel(
+        id: map['id'],
+        title: map['title'],
+        mainText: map['main_text'],
+        fromUid: map['from_uid'],
+        toUid: map['to_uid'],
+        unread: map['unread'],
+        createdAt: DateTime.parse(map['created_at']),
+      );
+    } catch (e) {
+      print(e);
+      rethrow;
+    }
+  }
 
   String getDisplayCreateAt() {
-    return DateFormat('yyyy年MM月dd日 hh:mm').format(_createAt);
+    return DateFormat('yyyy年MM月dd日 hh:mm').format(_createdAt);
   }
 
   Widget showHeadline(BuildContext context, double width, double height) {

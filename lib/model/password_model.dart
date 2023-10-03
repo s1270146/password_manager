@@ -7,14 +7,14 @@ import 'package:pass_manager/screen/password_registration_screen.dart';
 
 @immutable
 class PasswordModel {
-  final String _id;
+  final int _id;
   final String _name;
   final String _password;
   final String _uid;
   final bool _isShared;
   final DateTime _createdAt;
   const PasswordModel({
-    required String id,
+    required int id,
     required String name,
     required String password,
     required String uid,
@@ -26,10 +26,28 @@ class PasswordModel {
         _name = name,
         _id = id,
         _password = password;
+  factory PasswordModel.fromJson(dynamic data) {
+    try {
+      final map = data as Map<String, dynamic>;
+      return PasswordModel(
+        id: map['id'],
+        name: map['name'],
+        password: map['password'],
+        uid: map['uid'],
+        isShared: map['is_shared'],
+        createdAt: DateTime.parse(
+          map['created_at'],
+        ),
+      );
+    } catch (e) {
+      print(e);
+      rethrow;
+    }
+  }
 
   Widget view(final double width, final double height) {
     return PasswordViewBox(
-      id: _id,
+      id: _id.toString(),
       uid: _uid,
       name: _name,
       password: _password,
