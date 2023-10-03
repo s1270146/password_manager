@@ -7,7 +7,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Supabase.initialize(
-    url: "https://vwzckecvhxemeozszyxf.supabase.co",
+    url: const String.fromEnvironment("SUPABASE_URL"),
     anonKey: const String.fromEnvironment("SUPABASE_KEY"),
   );
   runApp(const ProviderScope(child: MyApp()));
@@ -16,7 +16,6 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
