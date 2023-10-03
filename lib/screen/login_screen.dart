@@ -110,11 +110,6 @@ class LoginScreen extends ConsumerWidget {
                         fontSize: 20,
                       ).showSnackBar(context);
                       print(e);
-                    } finally {
-                      FailedSnackBar(
-                        message: "System Error!",
-                        fontSize: 20,
-                      ).showSnackBar(context);
                     }
                   } else {
                     FailedSnackBar(
