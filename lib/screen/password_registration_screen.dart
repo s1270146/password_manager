@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pass_manager/component/app_bar/customized_app_bar.dart';
 import 'package:pass_manager/component/button/customized_button.dart';
+import 'package:pass_manager/component/dialog/customized_alert_dialog.dart';
 import 'package:pass_manager/component/form/customized_text_form_field.dart';
 import 'package:pass_manager/component/form/password_text_form_field.dart';
 import 'package:pass_manager/component/snack_bar/failed_snack_bar.dart';
 import 'package:pass_manager/component/snack_bar/success_snack_bar.dart';
+import 'package:pass_manager/provider/list_provider.dart';
+import 'package:pass_manager/provider/supabase_provider.dart';
 
-class PasswordRegistrationScreen extends StatelessWidget {
+class PasswordRegistrationScreen extends ConsumerWidget {
   PasswordRegistrationScreen({
     Key? key,
     this.title = "Edit Password",
@@ -38,7 +42,8 @@ class PasswordRegistrationScreen extends StatelessWidget {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final supabase = ref.watch(supabaseProvider);
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 97, 0, 148),
       appBar: CustomizedAppBar(
@@ -84,27 +89,82 @@ class PasswordRegistrationScreen extends StatelessWidget {
                   },
                 ),
               ),
-              Container(
-                margin: const EdgeInsets.all(10),
-                width: 100,
-                child: CustomizedButton(
-                  text: "Register",
-                  vertical: 13,
-                  onTap: () {
-                    if (_formKey.currentState!.validate()) {
-                      SuccessSnackBar(
-                        text: "The password was registered!",
-                        fontSize: 20,
-                      ).showSnackBar(context);
-                      Navigator.of(context).pop();
-                    } else {
-                      FailedSnackBar(
-                        message: "The password was not able to be registered!",
-                        fontSize: 20,
-                      ).showSnackBar(context);
-                    }
-                  },
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Visibility(
+                    visible: id != null,
+                    child: IconButton(
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => CustomizedAlertDialog(
+                            title: "Delete Password?",
+                            onPressedOfPossitive: () async {
+                              await supabase
+                                  .from('password')
+                                  .delete()
+                                  .eq('id', id!);
+                              if (!context.mounted) return;
+                              ref.invalidate(passwordListProvider);
+                              SuccessSnackBar(
+                                text: "Delete Password!",
+                                fontSize: 20,
+                              ).showSnackBar(context);
+                              int count = 0;
+                              Navigator.popUntil(context, (_) => count++ >= 2);
+                            },
+                            onPressedOfNegative: () =>
+                                Navigator.of(context).pop(),
+                          ),
+                        );
+                      },
+                      icon: const Icon(
+                        Icons.delete,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.all(10),
+                    width: 100,
+                    child: CustomizedButton(
+                      text: "Register",
+                      vertical: 13,
+                      onTap: () async {
+                        if (_formKey.currentState!.validate()) {
+                          if (id != null) {
+                            await supabase.from('password').update({
+                              "password": passwordController.text,
+                              "name": nameController.text,
+                            }).match({
+                              "id": id,
+                            });
+                          } else {
+                            await supabase.from('password').insert({
+                              "name": nameController.text,
+                              "password": passwordController.text,
+                              "uid": uid,
+                            });
+                          }
+                          if (!context.mounted) return;
+                          SuccessSnackBar(
+                            text: "The password was registered!",
+                            fontSize: 20,
+                          ).showSnackBar(context);
+                          ref.invalidate(passwordListProvider);
+                          Navigator.of(context).pop();
+                        } else {
+                          FailedSnackBar(
+                            message:
+                                "The password was not able to be registered!",
+                            fontSize: 20,
+                          ).showSnackBar(context);
+                        }
+                      },
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
