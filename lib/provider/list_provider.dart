@@ -12,6 +12,7 @@ final passwordListProvider = FutureProvider.autoDispose
       .from('password')
       .select()
       .eq('uid', user.getId())
+      .order('created_at')
       .then((getList) {
     List<PasswordModel> passwordList = [];
     getList = getList as List;
