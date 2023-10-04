@@ -19,6 +19,15 @@ class PasswordListScreen extends ConsumerWidget {
       appBar: CustomizedAppBar(
         automaticallyImplyLeading: false,
         title: "Password List",
+        actions: [
+          IconButton(
+            onPressed: () {
+              ref.invalidate(unreadMessageCountProvider);
+              ref.invalidate(passwordListProvider);
+            },
+            icon: const Icon(Icons.refresh),
+          )
+        ],
       ),
       body: Center(
         child: getData.when(
@@ -39,7 +48,8 @@ class PasswordListScreen extends ConsumerWidget {
       floatingActionButton: Visibility(
         visible: getData.hasValue,
         child: getData.when(
-          data: (data) => data.floatingActionButton(context, supabase.auth),
+          data: (data) =>
+              data.floatingActionButton(context, supabase.auth, ref),
           error: (err, stack) => const FloatingActionButton(
             onPressed: null,
             child: Icon(Icons.close),

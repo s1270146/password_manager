@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pass_manager/component/app_bar/customized_app_bar.dart';
 import 'package:pass_manager/provider/list_provider.dart';
+import 'package:pass_manager/provider/supabase_provider.dart';
 
 class MessageListScreen extends ConsumerWidget {
   const MessageListScreen({
@@ -12,6 +13,7 @@ class MessageListScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final messageList = ref.watch(messageListProvider(uid));
+    final supabase = ref.watch(supabaseProvider);
     return Scaffold(
       appBar: CustomizedAppBar(title: "Messages"),
       body: Center(
@@ -22,7 +24,8 @@ class MessageListScreen extends ConsumerWidget {
                 child: ListView.builder(
                   itemCount: data.length,
                   itemBuilder: (context, index) => Center(
-                    child: data[index].showHeadline(context, 300, 80),
+                    child: data[index]
+                        .showHeadline(context, 300, 80, supabase, ref),
                   ),
                 ),
               ),

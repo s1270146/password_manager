@@ -9,6 +9,7 @@ final passwordListProvider = FutureProvider.autoDispose
   final supabase = ref.watch(supabaseProvider);
   final user = await ref.watch(loginUserProvider(id));
   final encrypter = ref.watch(encrypterProvider);
+  final unreadMessageExists = await ref.watch(unreadMessageCountProvider(id));
   final List<PasswordModel> passwordList = await supabase
       .from('password')
       .select()
@@ -24,13 +25,24 @@ final passwordListProvider = FutureProvider.autoDispose
   });
   return PasswordListModel(
     user: user,
-    unreadMessageExists: true,
+    unreadMessageExists: unreadMessageExists,
     passwordList: passwordList,
   );
 });
 
-final messageListProvider = FutureProvider.autoDispose
-    .family<List<MessageModel>, String>((ref, id) async {
+final unreadMessageCountProvider =
+    StateProvider.family<Future<bool>, String>((ref, id) async {
+  final supabase = ref.watch(supabaseProvider);
+  final messageList = await supabase
+      .from('message')
+      .select('id')
+      .eq('to_uid', id)
+      .eq('unread', true) as List;
+  return messageList.isNotEmpty;
+});
+
+final messageListProvider =
+    FutureProvider.family<List<MessageModel>, String>((ref, id) async {
   final supabase = ref.watch(supabaseProvider);
   return await supabase
       .from('message')

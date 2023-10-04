@@ -1,9 +1,11 @@
 import 'package:encrypt/encrypt.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pass_manager/component/dialog/customized_alert_dialog.dart';
 import 'package:pass_manager/component/list_tile/password_view_box.dart';
 import 'package:pass_manager/model/user_model.dart';
+import 'package:pass_manager/provider/list_provider.dart';
 import 'package:pass_manager/screen/message_list_screen.dart';
 import 'package:pass_manager/screen/password_registration_screen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -64,6 +66,7 @@ class PasswordModel {
       password: _password,
       width: width,
       height: height,
+      textSize: 20,
     );
   }
 }
@@ -91,7 +94,8 @@ class PasswordListModel {
     );
   }
 
-  Widget floatingActionButton(BuildContext context, GoTrueClient auth) {
+  Widget floatingActionButton(
+      BuildContext context, GoTrueClient auth, WidgetRef ref) {
     return SizedBox(
       width: 70,
       height: 70,
@@ -142,13 +146,16 @@ class PasswordListModel {
                   backgroundColor: Colors.deepOrange,
                   foregroundColor: Colors.white,
                   label: 'Messages',
-                  onTap: () => Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => MessageListScreen(
-                        uid: user.getId(),
+                  onTap: () {
+                    ref.invalidate(messageListProvider);
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => MessageListScreen(
+                          uid: user.getId(),
+                        ),
                       ),
-                    ),
-                  ),
+                    );
+                  },
                 ),
               ],
             ),

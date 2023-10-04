@@ -12,7 +12,7 @@ class CustomizedAppBarTheme extends AppBarTheme {
           ),
           titleTextStyle: TextStyle(
             color: textColor,
-            fontSize: 20,
+            fontSize: 24,
           ),
         );
 }

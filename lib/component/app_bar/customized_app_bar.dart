@@ -5,9 +5,11 @@ class CustomizedAppBar extends AppBar {
     Key? key,
     bool automaticallyImplyLeading = true,
     required String title,
+    List<Widget>? actions,
   }) : super(
           key: key,
           automaticallyImplyLeading: automaticallyImplyLeading,
           title: Text(title),
+          actions: actions,
         );
 }

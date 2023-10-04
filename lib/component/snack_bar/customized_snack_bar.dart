@@ -7,9 +7,11 @@ class CustomizedSnackBar extends SnackBar {
     double? height,
     double? fontSize,
     Color? backgroundColor,
+    int milliseconds = 1000,
   }) : super(
           key: key,
           backgroundColor: backgroundColor,
+          duration: Duration(milliseconds: milliseconds),
           content: SizedBox(
             height: height,
             child: Center(

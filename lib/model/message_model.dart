@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:pass_manager/provider/list_provider.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class MessageModel {
   final int _id;
@@ -48,48 +51,58 @@ class MessageModel {
     return DateFormat('yyyy年MM月dd日 hh:mm').format(_createdAt);
   }
 
-  Widget showHeadline(BuildContext context, double width, double height) {
+  Widget showHeadline(BuildContext context, double width, double height,
+      SupabaseClient supabase, WidgetRef ref) {
     return GestureDetector(
-      onTap: () => showDialog<void>(
-        context: context,
-        builder: (context) => AlertDialog(
-          contentPadding: const EdgeInsets.all(0),
-          content: Container(
-            margin: const EdgeInsets.all(0),
-            padding: const EdgeInsets.all(0),
-            width: width,
-            height: 500,
-            child: Scaffold(
-              appBar: AppBar(
-                leading: IconButton(
-                  icon: const Icon(
-                    Icons.close,
+      onTap: () async {
+        showDialog<void>(
+          context: context,
+          builder: (context) => AlertDialog(
+            contentPadding: const EdgeInsets.all(0),
+            content: Container(
+              margin: const EdgeInsets.all(0),
+              padding: const EdgeInsets.all(0),
+              width: width,
+              height: 500,
+              child: Scaffold(
+                appBar: AppBar(
+                  leading: IconButton(
+                    icon: const Icon(
+                      Icons.close,
+                    ),
+                    onPressed: () => Navigator.pop(context),
                   ),
-                  onPressed: () => Navigator.pop(context),
+                  title: Text(_title),
                 ),
-                title: Text(_title),
-              ),
-              body: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(5),
-                    child: Text("From: $_fromUid"),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.all(5),
-                    child: const Text("Message: "),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.all(5),
-                    child: Text(_mainText),
-                  ),
-                ],
+                body: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(5),
+                      child: Text("From: $_fromUid"),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(5),
+                      child: const Text("Message: "),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(5),
+                      child: Text(_mainText),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-      ),
+        );
+        if (_unread) {
+          await supabase.from("message").update(
+            {'unread': false},
+          ).eq("id", _id);
+          ref.invalidate(messageListProvider);
+          ref.invalidate(unreadMessageCountProvider);
+        }
+      },
       child: Container(
         decoration: BoxDecoration(
           border: Border.all(
