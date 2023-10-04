@@ -28,6 +28,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         appBarTheme: CustomizedAppBarTheme(),
       ),
+      debugShowCheckedModeBanner: false,
       home: LoginScreen(),
     );
   }

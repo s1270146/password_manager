@@ -63,6 +63,7 @@ class LoginScreen extends ConsumerWidget {
               margin: const EdgeInsets.all(10),
               width: 100,
               child: CustomizedButton(
+                fontSize: 20,
                 text: "Log In",
                 vertical: 15,
                 onTap: () async {

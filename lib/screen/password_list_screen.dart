@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pass_manager/component/app_bar/customized_app_bar.dart';
 import 'package:pass_manager/provider/list_provider.dart';
+import 'package:pass_manager/provider/supabase_provider.dart';
 
 class PasswordListScreen extends ConsumerWidget {
   const PasswordListScreen({
@@ -12,6 +13,7 @@ class PasswordListScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final getData = ref.watch(passwordListProvider(uid));
+    final supabase = ref.watch(supabaseProvider);
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 63, 0, 113),
       appBar: CustomizedAppBar(
@@ -37,7 +39,7 @@ class PasswordListScreen extends ConsumerWidget {
       floatingActionButton: Visibility(
         visible: getData.hasValue,
         child: getData.when(
-          data: (data) => data.floatingActionButton(context),
+          data: (data) => data.floatingActionButton(context, supabase.auth),
           error: (err, stack) => const FloatingActionButton(
             onPressed: null,
             child: Icon(Icons.close),

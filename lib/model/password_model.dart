@@ -1,10 +1,12 @@
 import 'package:encrypt/encrypt.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:pass_manager/component/dialog/customized_alert_dialog.dart';
 import 'package:pass_manager/component/list_tile/password_view_box.dart';
 import 'package:pass_manager/model/user_model.dart';
 import 'package:pass_manager/screen/message_list_screen.dart';
 import 'package:pass_manager/screen/password_registration_screen.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 @immutable
 class PasswordModel {
@@ -89,7 +91,7 @@ class PasswordListModel {
     );
   }
 
-  Widget floatingActionButton(BuildContext context) {
+  Widget floatingActionButton(BuildContext context, GoTrueClient auth) {
     return SizedBox(
       width: 70,
       height: 70,
@@ -101,6 +103,24 @@ class PasswordListModel {
               icon: Icons.menu,
               activeIcon: Icons.close,
               children: [
+                SpeedDialChild(
+                  child: const Icon(Icons.logout),
+                  backgroundColor: Colors.blue,
+                  foregroundColor: Colors.white,
+                  label: 'Log Out',
+                  onTap: () => showDialog(
+                    context: context,
+                    builder: (context) => CustomizedAlertDialog(
+                      title: 'Log out?',
+                      onPressedOfPossitive: () {
+                        auth.signOut();
+                        int i = 0;
+                        Navigator.popUntil(context, (_) => i++ >= 2);
+                      },
+                      onPressedOfNegative: () => Navigator.of(context).pop(),
+                    ),
+                  ),
+                ),
                 SpeedDialChild(
                   child: const Icon(Icons.add),
                   backgroundColor: Colors.red,
